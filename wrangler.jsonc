@@ -16,7 +16,23 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	"d1_databases": [
+		{
+			"binding": "textDB_LOCAL",
+			"database_name": "textDB_LOCAL",
+			"database_id": "f333cdaf-df29-4e8b-a5e7-ab641ad6fca7",
+			"remote": false,
+			"migrations_dir": "db/migrations"
+		},
+		{
+			"binding": "textDB_PROD",
+			"database_name": "textDB_PROD",
+			"database_id": "2c06cb41-1d6e-45a7-8fe9-304bdd735a3f",
+			"remote": true,
+			"migrations_dir": "db/migrations"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

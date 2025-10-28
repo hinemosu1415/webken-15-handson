@@ -1,26 +1,56 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Hono } from 'hono'
 
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		const url = new URL(request.url);
-		switch (url.pathname) {
-			case '/message':
-				return new Response('Hello, World!');
-			case '/random':
-				return new Response(crypto.randomUUID());
-			default:
-				return new Response('Not Found', { status: 404 });
-		}
-	},
-} satisfies ExportedHandler<Env>;
+// Cloudflare Workers の型定義
+// wrangler.toml の 'DB' バインディングと型を合わせます
+export interface Env {
+  DB: D1Database;
+}
+
+const app = new Hono<{ Bindings: Env }>()
+
+// ルート: シンプルな挨拶
+app.get('/', (c) => {
+  return c.text('テキストリーダー Worker へようこそ！')
+})
+
+// すべてのテキストのリスト（ファイル名のみ）を取得
+app.get('/texts', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(
+      "SELECT id, filename, created_at FROM texts"
+    ).all();
+    return c.json(results);
+  } catch (e: any) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+// 特定のテキストファイルの内容を取得
+app.get('/texts/:filename', async (c) => {
+  const filename = c.req.param('filename');
+  if (!filename) {
+    return c.json({ error: 'ファイル名が必要です' }, 400);
+  }
+
+  try {
+    // プリペアドステートメントを使用して SQL インジェクションを防ぎます
+    const stmt = c.env.DB.prepare("SELECT content FROM texts WHERE filename = ?1");
+    const data = await stmt.bind(filename).first("content");
+
+    if (!data) {
+      return c.json({ error: 'テキストが見つかりません' }, 404);
+    }
+
+    // テキストをプレーンテキストとして返す
+    c.header('Content-Type', 'text/plain; charset=UTF-8');
+    return c.body(data as string);
+    
+    // もしJSONで返したい場合はこちら
+    // return c.json({ filename: filename, content: data });
+
+  } catch (e: any) {
+    return c.json({ error: e.message }, 500);
+  }
+});
+
+export default app
