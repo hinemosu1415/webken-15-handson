@@ -19,7 +19,7 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "DB", // ← シンプルに統一
+			"binding": "textDB",
 			"database_name": "textDB",
 			"database_id": "2c06cb41-1d6e-45a7-8fe9-304bdd735a3f",
 			"migrations_dir": "db/migrations"

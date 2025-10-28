@@ -1,7 +1,7 @@
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
-    const db = env.DB; // ← 統一。もうlocal/prod判定は不要
+    const db = env.textDB; 
 
     if (!db) {
       return Response.json({ error: "D1 Database binding is undefined" });

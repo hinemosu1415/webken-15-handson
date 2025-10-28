@@ -1,41 +1,42 @@
-name: Deploy to Cloudflare Workers
+name: Deploy Worker
 
 on:
   push:
     branches:
-      - main  # ← mainブランチにpushされたら実行（変更可能）
+      - main  # mainブランチにpushされたときに発火
 
 jobs:
   deploy:
-    name: Deploy Worker
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: read
-
     steps:
+      # 1. リポジトリをチェックアウト
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
+      # 2. Node.js をセットアップ
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 20
 
+      # 3. パッケージインストール
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Wrangler
-        run: npm install -g wrangler@latest
-
-      - name: Verify secrets
-        run: |
-          echo "CLOUDFLARE_API_TOKEN: ✅"
-          echo "CLOUDFLARE_ACCOUNT_ID: ✅"
-
-      - name: Publish to Cloudflare Workers
+      # 4. Cloudflare API 認証
+      - name: Authenticate Wrangler
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler login --api-token $CLOUDFLARE_API_TOKEN
+
+      # 5. DBを完全同期（importTxtToD1.ts 実行）
+      - name: Sync D1 database
+        run: npx ts-node scripts/importTxtToD1.ts
+
+      # 6. Worker をデプロイ
+      - name: Deploy Worker
+        env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          wrangler deploy
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler publish
