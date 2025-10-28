@@ -1,10 +1,8 @@
 /**
  * D1 に ./src/files/*.txt の内容を自動登録するスクリプト
- * ローカル or 本番どちらのDBに入れるかを指定可能
  * 
  * 例:
- *   npx ts-node scripts/importTxtToD1.ts local
- *   npx ts-node scripts/importTxtToD1.ts prod
+ *   npx ts-node scripts/importTxtToD1.ts
  */
 
 import { readdir, readFile } from "node:fs/promises";
@@ -20,24 +18,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filesDir = path.join(__dirname, "../src/files");
 
-// コマンド引数: "local" or "prod"
-const mode = process.argv[2] || "local";
-const binding = mode === "prod" ? "textDB_PROD" : "textDB_LOCAL";
-const remoteFlag = mode === "prod" ? "--remote" : "--local";
+// すべて textDB に統一
+const binding = "textDB";
+const remoteFlag = "--remote";
 
 (async () => {
-  console.log(`📦 モード: ${mode} → ${binding} に接続`);
+  console.log(`textDB に接続してインポートを開始します…`);
   try {
     const files = await readdir(filesDir);
     const txtFiles = files.filter((f) => f.endsWith(".txt"));
 
     if (txtFiles.length === 0) {
-      console.log("⚠️ テキストファイルが見つかりません。src/files に .txt を置いてください。");
+      console.log("テキストファイルが見つかりません。src/files に .txt を置いてください。");
       return;
     }
 
     for (const filename of txtFiles) {
-      console.log(`📄 ${filename} をインポート中...`);
+      console.log(` ${filename} をインポート中...`);
       const content = await readFile(path.join(filesDir, filename), "utf-8");
       const escapedContent = content
         .replace(/'/g, "''") // SQL用にエスケープ
@@ -54,8 +51,8 @@ const remoteFlag = mode === "prod" ? "--remote" : "--local";
       console.log(stdout.trim());
     }
 
-    console.log("✅ すべてのファイルを D1 に登録しました。");
+    console.log("すべてのファイルを D1 に登録しました。");
   } catch (e: any) {
-    console.error("❌ エラー:", e);
+    console.error("エラー:", e);
   }
 })();

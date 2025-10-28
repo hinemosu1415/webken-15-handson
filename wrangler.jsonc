@@ -19,14 +19,8 @@
 	},
 	"d1_databases": [
 		{
-			"binding": "textDB_LOCAL",
-			"database_name": "textDB_LOCAL",
-			"database_id": "f333cdaf-df29-4e8b-a5e7-ab641ad6fca7",
-			"migrations_dir": "db/migrations"
-		},
-		{
-			"binding": "textDB_PROD",
-			"database_name": "textDB_PROD",
+			"binding": "DB", // ← シンプルに統一
+			"database_name": "textDB",
 			"database_id": "2c06cb41-1d6e-45a7-8fe9-304bdd735a3f",
 			"migrations_dir": "db/migrations"
 		}
