@@ -1,32 +1,34 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Hello, World!</title>
-	</head>
-	<body>
-		<h1 id="heading"></h1>
-		<p>This page comes from a static asset stored at `public/index.html` as configured in `wrangler.jsonc`.</p>
-		<button id="button" type="button">Fetch a random UUID</button>
-		<output id="random" for="button"></output>
-		<script>
-			fetch('/message')
-				.then((resp) => resp.text())
-				.then((text) => {
-					const h1 = document.getElementById('heading');
-					h1.textContent = text;
-				});
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D1 Text Viewer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>D1 Text Viewer</h1>
+  </header>
 
-			const button = document.getElementById("button");
-			button.addEventListener("click", () => {
-				fetch('/random')
-					.then((resp) => resp.text())
-					.then((text) => {
-						const random = document.getElementById('random');
-						random.textContent = text;
-					});
-			});
-		</script>
-	</body>
+  <main>
+    <section id="list-section">
+      <h2>📄 登録されたファイル</h2>
+      <ul id="file-list">
+        <li>読み込み中...</li>
+      </ul>
+    </section>
+
+    <section id="viewer-section">
+      <h2 id="viewer-title">📝 ファイル内容</h2>
+      <pre id="file-content">(ここに内容が表示されます)</pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Powered by Cloudflare D1 + Workers</p>
+  </footer>
+
+  <script src="client.js"></script>
+</body>
 </html>
