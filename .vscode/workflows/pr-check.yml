@@ -1,0 +1,41 @@
+name: Pull Request Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ コードをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Node.jsセットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3️⃣ パッケージインストール
+      - name: Install dependencies
+        run: npm ci
+
+      # 4️⃣ TypeScript型チェック
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      # 5️⃣ テスト実行（Vitest）
+      - name: Run tests
+        run: npx vitest run --passWithNoTests
+
+      # 6️⃣ ファイル検証スクリプト（重複・5000字制限）
+      - name: Validate text files
+        run: npx ts-node scripts/validateFiles.ts
+
+      # 7️⃣ D1同期スクリプトをローカル実行テスト
+      - name: Test D1 import (local)
+        run: npx ts-node scripts/importTxtToD1.ts --local
