@@ -25,24 +25,24 @@ const binding = "textDB";
 const remoteFlag = mode === "prod" ? "--remote" : "";
 
 (async () => {
-  console.log(`📦 モード: ${mode} → D1(${binding}) に登録を行います`);
+  console.log(`モード: ${mode} → D1(${binding}) に登録を行います`);
 
   try {
     // --- テーブル全削除 ---
-    console.log("🧹 texts テーブルを全削除中...");
+    console.log("texts テーブルを全削除中...");
     await execAsync(`npx wrangler d1 execute ${binding} ${remoteFlag} --command "DELETE FROM texts;"`);
 
     // --- ファイル一覧取得 ---
     const files = await readdir(filesDir);
     const txtFiles = files.filter((f) => f.endsWith(".txt"));
     if (txtFiles.length === 0) {
-      console.log("⚠️ テキストファイルが見つかりません。src/files に .txt を置いてください。");
+      console.log("テキストファイルが見つかりません。src/files に .txt を置いてください。");
       return;
     }
 
     // --- ファイル挿入 ---
     for (const filename of txtFiles) {
-      console.log(`📄 ${filename} をインポート中...`);
+      console.log(`${filename} をインポート中...`);
       const content = await readFile(path.join(filesDir, filename), "utf-8");
       const escapedContent = content
         .replace(/'/g, "''")
@@ -57,8 +57,8 @@ const remoteFlag = mode === "prod" ? "--remote" : "";
       console.log(stdout.trim());
     }
 
-    console.log("✅ すべてのファイルを D1 に再登録しました。");
+    console.log("すべてのファイルを D1 に再登録しました。");
   } catch (e: any) {
-    console.error("❌ エラー:", e.message || e);
+    console.error("エラー:", e.message || e);
   }
 })();
