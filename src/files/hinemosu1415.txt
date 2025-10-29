@@ -1,1 +1,1 @@
-This is a written document
+This is a locally written document.
