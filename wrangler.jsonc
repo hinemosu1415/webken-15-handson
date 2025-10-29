@@ -21,7 +21,7 @@
 		{
 			"binding": "textDB",
 			"database_name": "textDB",
-			"database_id": "2c06cb41-1d6e-45a7-8fe9-304bdd735a3f",
+			"database_id": "8493d36e-cda7-4cf6-a991-0742dbedb237",
 			"migrations_dir": "db/migrations"
 		}
 	]
