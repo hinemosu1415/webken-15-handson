@@ -3,38 +3,54 @@ name: Deploy Worker
 on:
   push:
     branches:
-      - main  # mainブランチにpushされたときに発火
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. リポジトリをチェックアウト
+      # 1️⃣ Checkout
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Node.js をセットアップ
+      # 2️⃣ Node.js setup
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # 3. パッケージインストール
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 4. Cloudflare API 認証
+      # 4️⃣ Static type check
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      # 5️⃣ Run tests
+      - name: Run tests
+        run: npx vitest run --passWithNoTests
+
+      # 6️⃣ Validate src/files
+      - name: Validate text files
+        run: npx ts-node scripts/validateFiles.ts
+
+      # 7️⃣ Test import script (ローカルDBで実行確認)
+      - name: Test D1 import locally
+        run: npx ts-node scripts/importTxtToD1.ts --local
+
+      # 8️⃣ Cloudflare authentication
       - name: Authenticate Wrangler
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npx wrangler login --api-token $CLOUDFLARE_API_TOKEN
 
-      # 5. DBを完全同期（importTxtToD1.ts 実行）
+      # 9️⃣ Sync D1 database (本番用)
       - name: Sync D1 database
-        run: npx ts-node scripts/importTxtToD1.ts
+        run: npx ts-node scripts/importTxtToD1.ts --prod
 
-      # 6. Worker をデプロイ
+      # 🔟 Deploy Worker
       - name: Deploy Worker
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
