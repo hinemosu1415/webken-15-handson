@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "es2021",
-    "lib": ["es2021"],
+    "lib": [
+      "es2021"
+    ],
     "jsx": "react-jsx",
     "module": "es2022",
     "moduleResolution": "node",
@@ -13,8 +15,12 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
-    "types": ["./worker-configuration.d.ts", "node"],
+    "types": [
+      "./worker-configuration.d.ts",
+      "node"
+    ],
     "esModuleInterop": true
   },
   "include": [
