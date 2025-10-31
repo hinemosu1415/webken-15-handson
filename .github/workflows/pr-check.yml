@@ -1,0 +1,35 @@
+name: Pull Request Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ コードをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Node.js セットアップ
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3️⃣ 依存関係インストール
+      - name: Install dependencies
+        run: npm ci
+
+      # 4️⃣ フォーマット検査（Prettier）
+      - name: Check code format
+        run: npx prettier --check .
+
+      # 5️⃣ ファイル検証スクリプト（ESM対応）
+      - name: Validate text files
+        env:
+          NODE_OPTIONS: '--loader ts-node/esm'
+        run: node scripts/validatefile.ts
