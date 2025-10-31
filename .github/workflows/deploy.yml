@@ -19,7 +19,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ✅ これに変更！
+      # ✅ ts-node を念のため明示インストール（CI 環境対策）
+      - name: Ensure ts-node installed
+        run: npm install -D ts-node typescript
+
+      # ✅ D1 同期スクリプト実行
       - name: Sync D1 database
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
