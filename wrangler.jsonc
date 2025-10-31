@@ -7,24 +7,22 @@
 	"name": "webken-15-handson",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-10-24",
-	"compatibility_flags": [
-		"global_fetch_strictly_public"
-	],
+	"compatibility_flags": ["global_fetch_strictly_public"],
 	"assets": {
 		// The path to the directory containing the `index.html` file to be served at `/`
-		"directory": "./public"
+		"directory": "./public",
 	},
 	"observability": {
-		"enabled": true
+		"enabled": true,
 	},
 	"d1_databases": [
 		{
 			"binding": "textDB",
 			"database_name": "textDB",
 			"database_id": "8493d36e-cda7-4cf6-a991-0742dbedb237",
-			"migrations_dir": "db/migrations"
-		}
-	]
+			"migrations_dir": "db/migrations",
+		},
+	],
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
