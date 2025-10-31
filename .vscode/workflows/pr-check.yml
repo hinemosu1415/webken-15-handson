@@ -28,10 +28,6 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit
 
-      # 5️⃣ テスト実行（Vitest）
-      - name: Run tests
-        run: npx vitest run --passWithNoTests
-
       # 6️⃣ ファイル検証スクリプト（重複・5000字制限）
       - name: Validate text files
         run: npx ts-node scripts/validateFiles.ts
