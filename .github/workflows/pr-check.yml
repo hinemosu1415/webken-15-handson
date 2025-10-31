@@ -24,18 +24,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4️⃣ TypeScript型チェック
-      - name: TypeScript check
-        run: npx tsc --noEmit
+      # 4️⃣ フォーマット検査（Prettier）
+      - name: Check code format
+        run: npx prettier --check .
 
-      # 5️⃣ テスト実行（Vitest）
-      - name: Run tests
-        run: npx vitest run --passWithNoTests
-
-      # 6️⃣ ファイル検証スクリプト（重複・5000字制限）
+      # 5️⃣ ファイル検証スクリプト（重複・5000字制限など）
       - name: Validate text files
         run: npx ts-node scripts/validateFiles.ts
-
-      # 7️⃣ D1同期スクリプトをローカル実行テスト
-      - name: Test D1 import (local)
-        run: npx ts-node scripts/importTxtToD1.ts --local

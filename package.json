@@ -1,23 +1,24 @@
 {
-  "name": "my-worker-d1-project",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "db:migrate": "wrangler d1 migrations apply DB --local",
-    "db:migrate:prod": "wrangler d1 migrations apply DB"
-  },
-  "dependencies": {
-    "hono": "^4.0.0"
-  },
-  "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.10.3",
-    "@cloudflare/workers-types": "^4.20240403.0",
-    "@types/node": "^24.9.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.0.4",
-    "wrangler": "^4.45.1"
-  }
+	"name": "my-worker-d1-project",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"db:migrate": "wrangler d1 migrations apply DB --local",
+		"db:migrate:prod": "wrangler d1 migrations apply DB"
+	},
+	"dependencies": {
+		"hono": "^4.0.0"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.10.3",
+		"@cloudflare/workers-types": "^4.20240403.0",
+		"@types/node": "^24.9.1",
+		"prettier": "^3.6.2",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.0.4",
+		"wrangler": "^4.45.1"
+	}
 }
