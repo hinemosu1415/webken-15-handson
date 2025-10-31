@@ -10,25 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ リポジトリのチェックアウト
       - uses: actions/checkout@v4
 
+      # 2️⃣ Node.js セットアップ
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # 3️⃣ 依存関係インストール
       - name: Install dependencies
         run: npm ci
 
-      - name: Authenticate Wrangler
+      # 4️⃣ D1 データベース同期（--prodオプション付き）
+      - name: Sync D1 database
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx wrangler login --api-token $CLOUDFLARE_API_TOKEN
-
-      - name: Sync D1 database
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_D1_DATABASE_ID: ${{ secrets.CLOUDFLARE_D1_DATABASE_ID }}
         run: npx ts-node scripts/importTxtToD1.ts --prod
 
+      # 5️⃣ Worker をデプロイ
       - name: Deploy Worker
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx wrangler publish
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy
