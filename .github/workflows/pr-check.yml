@@ -32,4 +32,4 @@ jobs:
       - name: Validate text files
         env:
           NODE_OPTIONS: '--loader ts-node/esm'
-        run: node scripts/validatefiles.ts
+        run: node scripts/validatefile.ts
