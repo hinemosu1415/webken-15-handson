@@ -31,5 +31,5 @@ jobs:
       # 5️⃣ ファイル検証スクリプト（ESM対応）
       - name: Validate text files
         env:
-          NODE_OPTIONS: "--loader ts-node/esm"
+          NODE_OPTIONS: '--loader ts-node/esm'
         run: node scripts/validateFiles.ts
