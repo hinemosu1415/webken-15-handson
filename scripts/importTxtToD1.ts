@@ -20,7 +20,9 @@ const __dirname = path.dirname(__filename);
 const filesDir = path.join(__dirname, '../src/files');
 
 // コマンド引数で環境を選択
-const mode = process.argv[2] === 'prod' ? 'prod' : 'local';
+// 位置引数の 'prod' の他に '--prod' / '-p' も受け取るようにしておく
+const rawArgs = process.argv.slice(2);
+const mode = (rawArgs.includes('prod') || rawArgs.includes('--prod') || rawArgs.includes('-p')) ? 'prod' : 'local';
 const binding = 'textDB';
 const remoteFlag = mode === 'prod' ? '--remote' : '';
 
