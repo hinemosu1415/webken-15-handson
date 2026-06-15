@@ -38,6 +38,8 @@ export default {
 			});
 		}
 
+		console.warn(`Unhandled request: ${request.method} ${url.pathname}`);
+
 		return new Response('Not found', { status: 404 });
 	},
 };
